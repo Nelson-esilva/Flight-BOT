@@ -1,0 +1,33 @@
+---
+alwaysApply: true
+---
+
+# Visao geral do projeto
+
+Flight_BOT monitora passagens aereas e alerta quando uma tarifa encontrada atende ao preco maximo configurado.
+
+## Problema do MVP
+
+Permitir que o usuario cadastre rotas de interesse e receba alerta quando uma oferta encontrada estiver dentro das regras definidas.
+
+## O que o MVP nao resolve
+
+- Compra automatica de passagens.
+- Garantia de disponibilidade no checkout.
+- Multiplas fontes de tarifas.
+- Scraping de sites de companhias ou agencias.
+- Frontend web.
+- Recomendacao ou previsao de preco com IA.
+
+## Stack oficial
+
+- OpenClaw e orquestrador conversacional.
+- FastAPI e o backend.
+- Amadeus e a primeira fonte de tarifas.
+- Telegram e o canal inicial de alerta.
+- SQLite e o banco do MVP.
+- APScheduler e o mecanismo inicial de agendamento.
+
+## Limites de escopo
+
+Implementar apenas funcionalidades solicitadas e dentro do MVP. Nao trocar tecnologias, adicionar camadas ou criar integracoes extras sem pedido explicito.

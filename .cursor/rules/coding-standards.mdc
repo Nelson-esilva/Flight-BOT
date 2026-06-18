@@ -1,0 +1,32 @@
+---
+globs: app/**/*.py, tests/**/*.py
+alwaysApply: false
+---
+
+# Padroes de codigo
+
+- Use Python simples e legivel.
+- Prefira funcoes pequenas e nomes explicitos.
+- Evite abstracoes prematuras.
+- Evite classes desnecessarias.
+- Evite comentarios obvios.
+- Use tipagem quando ajudar a clareza.
+- Separe integracao externa de regra de negocio.
+- Trate erros externos sem derrubar o scheduler inteiro.
+
+## Proibido
+
+- Codigo morto.
+- TODOs vagos.
+- Prints soltos em producao.
+- Variaveis globais mutaveis.
+- Duplicacao de parsing de datas.
+- Duplicacao de formatacao de moeda.
+- Logica de alerta espalhada em multiplos arquivos.
+
+## Preferencias
+
+- Alteracoes pequenas e localizadas.
+- Erros com mensagens uteis e sem expor segredos.
+- Retornos normalizados antes de aplicar regras internas.
+- Antes de codar em `app/` ou `tests/`, consulte `ai/checklists/before-coding.md`.

@@ -1,6 +1,4 @@
 fastapi
-uvicorn
-apscheduler
-amadeus
-python-telegram-bot
+uvicorn[standard]
 pydantic-settings
+pytest

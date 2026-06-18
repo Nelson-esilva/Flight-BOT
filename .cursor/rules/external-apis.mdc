@@ -1,0 +1,23 @@
+---
+description: Regras para implementar ou revisar integracoes externas no Flight_BOT, especialmente Amadeus e Telegram
+globs: app/services/**/*.py, app/config.py, .env.example
+alwaysApply: false
+---
+
+# APIs externas
+
+- Nao inventar campos da Amadeus.
+- Consultar documentacao oficial antes de implementar detalhes especificos.
+- Encapsular Amadeus em `services/amadeus_client.py`.
+- Normalizar resposta antes de aplicar regra.
+- Nao misturar payload bruto com modelo interno.
+- Preservar `raw_json` apenas para auditoria/debug.
+- Tratar rate limit, erro 401, erro 429 e indisponibilidade.
+- Nao implementar scraping direto de Google Flights, Azul, LATAM, GOL, Decolar ou 123milhas no MVP.
+
+No MVP, a unica fonte de tarifas permitida e Amadeus Flight Offers API.
+
+## Rotina
+
+- Antes de implementar detalhes de API externa, consulte `ai/checklists/api-integration-checklist.md`.
+- Antes de ampliar arquitetura por causa de integracao externa, consulte `ai/checklists/no-overengineering-checklist.md`.

@@ -1,0 +1,28 @@
+---
+alwaysApply: true
+---
+
+# Arquitetura
+
+Fluxo esperado:
+
+Usuario no Telegram -> OpenClaw -> API FastAPI -> SQLite -> APScheduler -> Amadeus API -> Motor de regras -> Telegram Notifier
+
+## Responsabilidades
+
+- `routes/`: apenas entrada HTTP e delegacao.
+- `schemas.py`: contratos de entrada e saida.
+- `models.py`: entidades persistidas.
+- `services/`: integracoes e logica de aplicacao.
+- `rules.py`: regras deterministicas de alerta.
+- `scheduler.py`: execucao periodica.
+- `database.py`: conexao e inicializacao do banco.
+- `config.py`: variaveis de ambiente e configuracoes.
+
+## Regras
+
+- Nenhuma rota deve conter logica de negocio extensa.
+- Nenhum servico deve acessar variaveis de ambiente diretamente se `config.py` ja fornece a configuracao.
+- Nenhuma regra de alerta deve depender de IA.
+- Payload bruto de API externa nao deve vazar para regras de dominio.
+- Persistencia e integracao externa devem permanecer separadas.

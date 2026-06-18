@@ -1,0 +1,23 @@
+---
+alwaysApply: true
+---
+
+# Seguranca
+
+- Nunca commitar `.env`.
+- Nunca imprimir tokens.
+- Nunca armazenar cartao, senha de companhia aerea ou login de usuario.
+- Nao permitir compra automatica.
+- Nao permitir comandos shell arbitrarios via OpenClaw.
+- Aceitar comandos apenas de usuarios/canais autorizados.
+- Validar origem e destino como codigos IATA.
+- Validar datas.
+- Validar preco maximo como numero positivo.
+- Tratar links de compra apenas como referencia de verificacao.
+
+Este sistema alerta sobre ofertas. Ele nao compra passagens.
+
+## Rotina
+
+- Antes de commit, consultar `ai/checklists/before-commit.md`.
+- Antes de qualquer integracao externa, consultar `ai/checklists/api-integration-checklist.md`.

@@ -1,0 +1,27 @@
+---
+globs: tests/**/*.py, app/**/*.py
+alwaysApply: false
+---
+
+# Politica de testes
+
+- Testes devem comecar simples.
+- Priorizar regra de alerta.
+- Priorizar normalizacao de resposta.
+- Priorizar deduplicacao de alerta.
+- Evitar mocks complexos no inicio.
+- Nao chamar APIs reais em testes unitarios.
+- Separar testes unitarios de testes de integracao.
+
+## Exemplos de testes desejados futuramente
+
+- `should_alert` retorna verdadeiro quando preco <= limite.
+- `should_alert` retorna falso quando moeda diverge.
+- `should_alert` retorna falso quando escalas > maximo.
+- Alerta duplicado nao deve ser reenviado.
+- Monitor inativo nao deve ser consultado.
+
+## Rotina
+
+- Ao criar ou alterar testes, consulte `ai/checklists/before-coding.md`.
+- Antes de commit, confira `ai/checklists/before-commit.md`.

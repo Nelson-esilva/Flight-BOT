@@ -1,0 +1,31 @@
+---
+alwaysApply: true
+---
+
+# Disciplina de tarefa
+
+- Cumpra exatamente o pedido.
+- Nao antecipe etapas futuras.
+- Nao implemente integracao real quando o pedido for apenas estrutura.
+- Nao crie painel web se nao for solicitado.
+- Nao troque SQLite por PostgreSQL sem solicitacao.
+- Nao troque APScheduler por Celery sem solicitacao.
+- Nao adicione autenticacao sem solicitacao.
+- Nao adicione Docker complexo sem solicitacao.
+- Nao crie frontend sem solicitacao.
+
+## Formato de execucao esperado
+
+1. Entender a tarefa.
+2. Listar arquivos que serao afetados.
+3. Fazer a menor alteracao possivel.
+4. Evitar mudancas cosmeticas.
+5. Validar consistencia.
+6. Resumir objetivamente o que foi feito.
+
+## Rotinas de checkagem
+
+- Antes de alterar codigo, consultar `ai/checklists/before-coding.md`.
+- Antes de commit, consultar `ai/checklists/before-commit.md`.
+- Antes de integracao externa, consultar `ai/checklists/api-integration-checklist.md`.
+- Antes de criar nova camada, ferramenta ou dependencia, consultar `ai/checklists/no-overengineering-checklist.md`.

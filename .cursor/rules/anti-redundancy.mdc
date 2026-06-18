@@ -1,0 +1,29 @@
+---
+alwaysApply: true
+---
+
+# Regras contra redundancia
+
+- Nao criar novo client se ja existir `amadeus_client.py`.
+- Nao criar novo notificador se ja existir `telegram_notifier.py`.
+- Nao criar nova regra se ja existir `rules.py`.
+- Nao criar parsing de monitor em varios lugares.
+- Nao duplicar schemas.
+- Nao criar wrappers sem necessidade.
+- Nao criar diretorios genericos como `utils/` sem justificativa.
+- Nao criar camada repository no MVP, a menos que seja explicitamente solicitado.
+
+## Checklist obrigatoria antes de criar arquivo novo
+
+1. Esse arquivo representa uma responsabilidade nova?
+2. Essa responsabilidade ja existe em outro modulo?
+3. E possivel resolver alterando arquivo existente?
+4. O nome do arquivo expressa claramente sua funcao?
+5. Esse arquivo sera usado imediatamente?
+
+Se a resposta 5 for "nao", nao crie o arquivo.
+
+## Rotina
+
+- Antes de criar arquivo novo, consultar `ai/checklists/no-overengineering-checklist.md`.
+- Antes de codar, confirmar `ai/checklists/before-coding.md`.
