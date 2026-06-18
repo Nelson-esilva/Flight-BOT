@@ -146,6 +146,37 @@ def list_monitors(connection: Connection | None = None) -> list[Monitor]:
             db.close()
 
 
+def list_active_monitors(connection: Connection | None = None) -> list[Monitor]:
+    owns_connection = connection is None
+    db = connection or connect()
+    initialize_database(db)
+
+    try:
+        rows = db.execute(
+            """
+            SELECT
+                id,
+                origin,
+                destination,
+                departure_date,
+                return_date,
+                trip_type,
+                max_price,
+                currency,
+                adults,
+                max_stops,
+                status
+            FROM monitors
+            WHERE status = 'active'
+            ORDER BY id
+            """
+        ).fetchall()
+        return [_monitor_from_row(row) for row in rows]
+    finally:
+        if owns_connection:
+            db.close()
+
+
 def get_monitor(monitor_id: int, connection: Connection | None = None) -> Monitor | None:
     owns_connection = connection is None
     db = connection or connect()
