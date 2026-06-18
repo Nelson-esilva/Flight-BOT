@@ -29,6 +29,8 @@ Interpretar comando textual vindo do OpenClaw e extrair dados estruturados.
 - Validar IATA, datas, preco, moeda e tipo de viagem.
 - Encaminhar apenas comandos dentro do MVP.
 - Manter parsing em um ponto claro do fluxo.
+- Usar `openclaw/skill_flight_monitor.md` como contrato operacional da skill.
+- Quando faltar campo obrigatorio, pedir complemento antes de chamar a API.
 
 ## O que nao fazer
 
@@ -36,3 +38,4 @@ Interpretar comando textual vindo do OpenClaw e extrair dados estruturados.
 - Nao criar frontend conversacional fora do OpenClaw.
 - Nao acionar compra automatica.
 - Nao duplicar parsing em varios modulos.
+- Nao chamar Amadeus, Telegram ou banco diretamente pelo OpenClaw.

@@ -34,3 +34,14 @@ Health check:
 ```text
 GET /health
 ```
+
+## Execucao com Docker Compose
+
+1. Copie `.env.example` para `.env` e preencha as credenciais necessarias.
+2. Suba a API:
+
+```bash
+docker compose up --build
+```
+
+O SQLite persiste em `data/` pelo volume configurado no Compose.
