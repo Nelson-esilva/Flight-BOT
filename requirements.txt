@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+apscheduler
+amadeus
+python-telegram-bot
+pydantic-settings

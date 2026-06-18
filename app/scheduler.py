@@ -1,0 +1,1 @@
+# Configuracao futura do APScheduler.
