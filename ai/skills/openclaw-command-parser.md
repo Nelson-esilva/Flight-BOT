@@ -31,6 +31,8 @@ Interpretar comando textual vindo do OpenClaw e extrair dados estruturados.
 - Manter parsing em um ponto claro do fluxo.
 - Usar `openclaw/skill_flight_monitor.md` como contrato operacional da skill.
 - Quando faltar campo obrigatorio, pedir complemento antes de chamar a API.
+- Para busca flexivel, enviar datas completas em ISO `YYYY-MM-DD` para `POST /search/flexible`.
+- Converter apenas cidades do mapa minimo documentado em `openclaw/skill_flight_monitor.md`.
 
 ## O que nao fazer
 
@@ -39,3 +41,4 @@ Interpretar comando textual vindo do OpenClaw e extrair dados estruturados.
 - Nao acionar compra automatica.
 - Nao duplicar parsing em varios modulos.
 - Nao chamar Amadeus, Telegram ou banco diretamente pelo OpenClaw.
+- Nao criar monitor periodico automaticamente quando o usuario pedir busca flexivel pontual.

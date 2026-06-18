@@ -112,6 +112,76 @@ Endpoint:
 POST /monitors/{id}/run-now
 ```
 
+### Busca flexivel de menor tarifa
+
+Exemplos:
+
+- "Identifique para mim a passagem de ida e volta mais barata no mes de julho e volta em agosto, 1 pessoa adulta, Belo Horizonte para Manaus."
+- "Procure para mim o melhor preco de viagem de Belo Horizonte para Manaus, 1 adulto, a partir do dia 20 de julho com volta no maximo em 4 de agosto, viagem de 10 a 12 dias."
+
+Endpoint:
+
+```text
+POST /search/flexible
+```
+
+Payload com janelas explicitas:
+
+```json
+{
+  "origin": "CNF",
+  "destination": "MAO",
+  "trip_type": "round_trip",
+  "departure_start": "2026-07-01",
+  "departure_end": "2026-07-31",
+  "return_start": "2026-08-01",
+  "return_end": "2026-08-31",
+  "adults": 1,
+  "currency": "BRL",
+  "min_trip_days": 5,
+  "max_trip_days": 30,
+  "max_candidates": 30
+}
+```
+
+Payload com janela parcial e duracao:
+
+```json
+{
+  "origin": "CNF",
+  "destination": "MAO",
+  "trip_type": "round_trip",
+  "departure_start": "2026-07-20",
+  "return_end": "2026-08-04",
+  "adults": 1,
+  "currency": "BRL",
+  "min_trip_days": 10,
+  "max_trip_days": 12,
+  "max_candidates": 30
+}
+```
+
+Resposta resumida ao usuario:
+
+- menor preco encontrado;
+- companhia;
+- datas de ida e volta;
+- escalas;
+- quantidade de combinacoes consultadas;
+- aviso para verificar a oferta antes de comprar.
+
+## Mapa minimo cidade para IATA
+
+- "belo horizonte" -> "CNF"
+- "confins" -> "CNF"
+- "manaus" -> "MAO"
+
+Se a cidade nao estiver nesse mapa ou houver ambiguidade, pedir o codigo IATA ao usuario. Nao chamar APIs externas de geocodificacao.
+
+## Meses sem ano
+
+Se o usuario disser apenas "julho" ou "agosto", inferir o proximo mes correspondente no futuro considerando o ano atual do ambiente. O backend deve receber datas completas em `YYYY-MM-DD`.
+
 ## Quando faltar informacao
 
 Nao invente valores. Pergunte objetivamente pelo campo faltante:
@@ -138,6 +208,7 @@ Nao invente valores. Pergunte objetivamente pelo campo faltante:
 - Listagem: mostrar ID, rota, datas, limite e status.
 - Pausa/reativacao: confirmar status atualizado.
 - Busca manual: informar quantidade de ofertas encontradas, melhor oferta e se alerta foi enviado ou duplicado.
+- Busca flexivel: informar menor tarifa, datas, companhia, escalas e combinacoes consultadas.
 
 ## Restricoes
 
@@ -146,5 +217,6 @@ Nao invente valores. Pergunte objetivamente pelo campo faltante:
 - Nao aceitar comandos shell.
 - Nao consultar Amadeus diretamente.
 - Nao enviar Telegram diretamente.
+- Nao criar monitor automaticamente a partir de busca flexivel.
 - Nao criar acao fora do MVP.
 - Nao incluir tokens ou segredos no prompt, payload ou logs.

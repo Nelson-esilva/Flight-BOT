@@ -3,12 +3,14 @@ from fastapi import FastAPI
 from app.config import get_settings
 from app.database import initialize_database
 from app.routes.monitors import router as monitors_router
+from app.routes.search import router as search_router
 from app.scheduler import create_scheduler
 
 
 settings = get_settings()
 app = FastAPI(title=settings.app_name)
 app.include_router(monitors_router)
+app.include_router(search_router)
 scheduler = create_scheduler()
 
 

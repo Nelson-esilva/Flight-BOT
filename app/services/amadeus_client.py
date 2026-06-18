@@ -106,6 +106,31 @@ class AmadeusClient:
             for offer in payload.get("data", [])
         ]
 
+    def search_round_trip(
+        self,
+        origin: str,
+        destination: str,
+        departure_date: str,
+        return_date: str,
+        adults: int = 1,
+        currency: str = "BRL",
+        max_results: int = 10,
+    ) -> list[FareResult]:
+        monitor = Monitor(
+            id=None,
+            origin=origin,
+            destination=destination,
+            departure_date=departure_date,
+            return_date=return_date,
+            trip_type="round_trip",
+            max_price=999999999,
+            currency=currency,
+            adults=adults,
+            max_stops=None,
+            status="active",
+        )
+        return self.search_flight_offers(monitor, max_results)
+
     def _get_access_token(self) -> str:
         if self._access_token:
             return self._access_token
@@ -179,6 +204,24 @@ class AmadeusClient:
 
 def search_flight_offers(monitor: Monitor) -> list[FareResult]:
     return AmadeusClient().search_flight_offers(monitor)
+
+
+def search_round_trip_offers(
+    origin: str,
+    destination: str,
+    departure_date: str,
+    return_date: str,
+    adults: int = 1,
+    currency: str = "BRL",
+) -> list[FareResult]:
+    return AmadeusClient().search_round_trip(
+        origin,
+        destination,
+        departure_date,
+        return_date,
+        adults,
+        currency,
+    )
 
 
 def _count_stops(itineraries: list[dict]) -> int:
