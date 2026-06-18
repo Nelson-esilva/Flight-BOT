@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     amadeus_timeout_seconds: float = 10.0
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
+    telegram_timeout_seconds: float = 10.0
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

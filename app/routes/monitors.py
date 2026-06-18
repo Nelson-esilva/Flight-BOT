@@ -1,6 +1,12 @@
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemas import MonitorCreate, MonitorResponse, MonitorUpdate
+from app.schemas import (
+    FareResultResponse,
+    MonitorCreate,
+    MonitorResponse,
+    MonitorRunResponse,
+    MonitorUpdate,
+)
 from app.services import monitor_service
 
 
@@ -44,3 +50,23 @@ def delete_monitor(monitor_id: int) -> None:
     deleted = monitor_service.delete_monitor(monitor_id)
     if not deleted:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Monitor not found")
+
+
+@router.post("/{monitor_id}/run-now", response_model=MonitorRunResponse)
+def run_monitor_now(monitor_id: int) -> MonitorRunResponse:
+    monitor, offers, best_offer = monitor_service.run_monitor_now(monitor_id)
+    if monitor is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Monitor not found")
+
+    if monitor.status != "active":
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Monitor is inactive")
+
+    return MonitorRunResponse(
+        monitor_id=monitor.id or monitor_id,
+        offers_found=len(offers),
+        best_offer=(
+            FareResultResponse.model_validate(best_offer)
+            if best_offer is not None
+            else None
+        ),
+    )

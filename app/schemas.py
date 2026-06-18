@@ -64,3 +64,24 @@ class MonitorResponse(BaseModel):
     status: MonitorStatus
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class FareResultResponse(BaseModel):
+    id: int | None
+    monitor_id: int
+    source: str
+    total_price: float
+    currency: str
+    airline: str | None
+    stops: int | None
+    duration: str | None
+    departure_at: str | None
+    return_at: str | None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class MonitorRunResponse(BaseModel):
+    monitor_id: int
+    offers_found: int
+    best_offer: FareResultResponse | None
