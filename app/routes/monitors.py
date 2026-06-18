@@ -54,7 +54,8 @@ def delete_monitor(monitor_id: int) -> None:
 
 @router.post("/{monitor_id}/run-now", response_model=MonitorRunResponse)
 def run_monitor_now(monitor_id: int) -> MonitorRunResponse:
-    monitor, offers, best_offer = monitor_service.run_monitor_now(monitor_id)
+    result = monitor_service.run_monitor_now(monitor_id)
+    monitor = result.monitor
     if monitor is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Monitor not found")
 
@@ -63,10 +64,13 @@ def run_monitor_now(monitor_id: int) -> MonitorRunResponse:
 
     return MonitorRunResponse(
         monitor_id=monitor.id or monitor_id,
-        offers_found=len(offers),
+        offers_found=len(result.offers),
         best_offer=(
-            FareResultResponse.model_validate(best_offer)
-            if best_offer is not None
+            FareResultResponse.model_validate(result.best_offer)
+            if result.best_offer is not None
             else None
         ),
+        alerts_sent=result.alerts_sent,
+        duplicate_alerts=result.duplicate_alerts,
+        alert_error=result.alert_error,
     )

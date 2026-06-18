@@ -53,30 +53,32 @@ def test_run_monitor_now_saves_results_and_returns_best_offer() -> None:
             ),
         ]
 
-    loaded_monitor, saved_offers, best_offer = monitor_service.run_monitor_now(
+    result = monitor_service.run_monitor_now(
         monitor.id,
         connection,
         fake_search,
+        lambda _monitor, _fare: None,
     )
 
-    assert loaded_monitor == monitor
-    assert len(saved_offers) == 2
-    assert best_offer is not None
-    assert best_offer.total_price == 850
-    assert best_offer.id is not None
+    assert result.monitor == monitor
+    assert len(result.offers) == 2
+    assert result.best_offer is not None
+    assert result.best_offer.total_price == 850
+    assert result.best_offer.id is not None
     assert len(monitor_service.list_fare_results_for_monitor(monitor.id, connection)) == 2
 
 
 def test_run_monitor_now_returns_none_for_missing_monitor() -> None:
-    monitor, offers, best_offer = monitor_service.run_monitor_now(
+    result = monitor_service.run_monitor_now(
         999,
         memory_connection(),
         lambda _monitor: [],
+        lambda _monitor, _fare: None,
     )
 
-    assert monitor is None
-    assert offers == []
-    assert best_offer is None
+    assert result.monitor is None
+    assert result.offers == []
+    assert result.best_offer is None
 
 
 def test_run_monitor_now_does_not_search_inactive_monitor() -> None:
@@ -103,14 +105,15 @@ def test_run_monitor_now_does_not_search_inactive_monitor() -> None:
         called = True
         return []
 
-    loaded_monitor, offers, best_offer = monitor_service.run_monitor_now(
+    result = monitor_service.run_monitor_now(
         monitor.id,
         connection,
         fake_search,
+        lambda _monitor, _fare: None,
     )
 
-    assert loaded_monitor is not None
-    assert loaded_monitor.status == "inactive"
-    assert offers == []
-    assert best_offer is None
+    assert result.monitor is not None
+    assert result.monitor.status == "inactive"
+    assert result.offers == []
+    assert result.best_offer is None
     assert called is False

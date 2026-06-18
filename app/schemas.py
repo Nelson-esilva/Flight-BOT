@@ -85,3 +85,6 @@ class MonitorRunResponse(BaseModel):
     monitor_id: int
     offers_found: int
     best_offer: FareResultResponse | None
+    alerts_sent: int = 0
+    duplicate_alerts: int = 0
+    alert_error: str | None = None

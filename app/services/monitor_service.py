@@ -3,12 +3,32 @@ from sqlite3 import Connection, Row
 
 from app.database import connect, initialize_database
 from app.models import AlertSent, FareResult, Monitor
-from app.rules import generate_alert_hash
+from app.rules import generate_alert_hash, should_alert
 from app.schemas import MonitorCreate, MonitorUpdate
 from app.services.amadeus_client import search_flight_offers
+from app.services.telegram_notifier import send_alert
 
 
 FlightOfferSearch = Callable[[Monitor], list[FareResult]]
+AlertSender = Callable[[Monitor, FareResult], None]
+
+
+class MonitorRunResult:
+    def __init__(
+        self,
+        monitor: Monitor | None,
+        offers: list[FareResult],
+        best_offer: FareResult | None,
+        alerts_sent: int = 0,
+        duplicate_alerts: int = 0,
+        alert_error: str | None = None,
+    ) -> None:
+        self.monitor = monitor
+        self.offers = offers
+        self.best_offer = best_offer
+        self.alerts_sent = alerts_sent
+        self.duplicate_alerts = duplicate_alerts
+        self.alert_error = alert_error
 
 
 def _monitor_from_row(row: Row) -> Monitor:
@@ -329,7 +349,8 @@ def run_monitor_now(
     monitor_id: int,
     connection: Connection | None = None,
     offer_search: FlightOfferSearch = search_flight_offers,
-) -> tuple[Monitor | None, list[FareResult], FareResult | None]:
+    alert_sender: AlertSender = send_alert,
+) -> MonitorRunResult:
     owns_connection = connection is None
     db = connection or connect()
     initialize_database(db)
@@ -337,15 +358,28 @@ def run_monitor_now(
     try:
         monitor = get_monitor(monitor_id, db)
         if monitor is None:
-            return None, [], None
+            return MonitorRunResult(None, [], None)
 
         if monitor.status != "active":
-            return monitor, [], None
+            return MonitorRunResult(monitor, [], None)
 
         offers = offer_search(monitor)
         saved_offers = [save_fare_result(offer, db) for offer in offers]
         best_offer = min(saved_offers, key=lambda offer: offer.total_price, default=None)
-        return monitor, saved_offers, best_offer
+        alerts_sent, duplicate_alerts, alert_error = process_alerts(
+            monitor,
+            saved_offers,
+            db,
+            alert_sender,
+        )
+        return MonitorRunResult(
+            monitor,
+            saved_offers,
+            best_offer,
+            alerts_sent,
+            duplicate_alerts,
+            alert_error,
+        )
     finally:
         if owns_connection:
             db.close()
@@ -441,3 +475,40 @@ def should_send_new_alert(
     connection: Connection | None = None,
 ) -> bool:
     return not alert_was_sent(generate_alert_hash(fare, monitor), connection)
+
+
+def process_alerts(
+    monitor: Monitor,
+    fares: list[FareResult],
+    connection: Connection | None = None,
+    alert_sender: AlertSender = send_alert,
+) -> tuple[int, int, str | None]:
+    owns_connection = connection is None
+    db = connection or connect()
+    initialize_database(db)
+    sent_count = 0
+    duplicate_count = 0
+    alert_error: str | None = None
+
+    try:
+        for fare in fares:
+            if not should_alert(fare, monitor):
+                continue
+
+            if not should_send_new_alert(monitor, fare, db):
+                duplicate_count += 1
+                continue
+
+            try:
+                alert_sender(monitor, fare)
+            except Exception as exc:
+                alert_error = str(exc)
+                continue
+
+            register_alert_sent(monitor, fare, db)
+            sent_count += 1
+
+        return sent_count, duplicate_count, alert_error
+    finally:
+        if owns_connection:
+            db.close()
