@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     check_interval_hours: int = 6
     amadeus_api_key: str = ""
     amadeus_api_secret: str = ""
+    amadeus_base_url: str = "https://test.api.amadeus.com"
+    amadeus_timeout_seconds: float = 10.0
     telegram_bot_token: str = ""
     telegram_chat_id: str = ""
 
